@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Socket.IO Chat</title>
+    <style>
+        .container {
+
+            margin: 0 auto;
+            font-family: 'calibri';
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: capitalize;
+        }
+
+        .chatbox {
+            height: 500px;
+            padding: 20px;
+            border: 1px solid #dfdfdf;
+        }
+
+        .message {
+            text-transform: capitalize;
+            box-shadow: 0 0 10px #dfdfdf;
+            background: #dfdfdf;
+            padding: 10px;
+            border-radius: 20px;
+            margin: 10px 0;
+            width: 350px;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .left {
+            margin: 10px 0 0 auto;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .center {
+            text-transform: capitalize;
+
+            width: 100%;
+            margin: 10px 0;
+            border-radius: 0;
+            text-align: center;
+        }
+
+        .red {
+            color: red;
+            font-weight: bold;
+        }
+
+        .green {
+            font-weight: bold;
+
+            color: green;
+        }
+
+        input {
+            width: 100%;
+            padding: 5px 10px;
+        }
+
+        .actionBtn {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>Chat Room</h1>
+        <div class="chatbox">
+            <!-- <div class="message left">
+                <p>hi!</p>
+            </div>
+            <div class="center">
+                <p class="red">Anant left the chat</p>
+            </div>
+            <div class="message ">
+                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laudantium, animi molestiae facere, esse et
+                    doloremque dolorum repellendus debitis, commodi provident iste dolores omnis voluptates veniam
+                    nesciunt nobis corporis quam voluptatibus.</p>
+            </div>
+            <div class="center">
+                <p class="green">Anant joined the chat</p>
+            </div> -->
+        </div>
+
+        <form action="" class="actionBtn" method="post">
+            <input type="text" placeholder="Type message here...." name="msg" id="msg">
+            <button type="button" type="submit" id="btn">send</button>
+        </form>
+
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const chatbox = document.querySelector(".chatbox");
+        const actionBtn = document.querySelector(".actionBtn");
+        const msg = document.querySelector("#msg");
+        const btn = document.querySelector("#btn");
+
+        actionBtn.addEventListener("submit", (e) => {
+            e.preventDefault();
+            printMessage(`You: ${msg.value}`, '', 'message right');
+            socket.emit("send", msg.value);
+            msg.value = '';
+        })
+
+        function printMessage(message, name, className) {
+            const div = document.createElement('div');
+            div.innerHTML = `<strong>${name}</strong> ${message}`;
+            div.classList = className;
+            chatbox.append(div);
+        }
+        const name = prompt("Please Enter your Name");
+        const socket = io('http://localhost:3000');
+
+        socket.emit("new-user-join", name);
+
+        socket.on("new-joine", name => {
+            printMessage('', `${name} joinde the chat`, 'center green');
+        });
+        socket.on('send', data => {
+            printMessage(data.message, data.name, 'message');
+        });
+
+
+        socket.on("getmsg", data => {
+            printMessage(data.message, data.name, ' message left')
+        });
+
+
+        socket.on("left", name => {
+            printMessage('', `${name} left the chat`, 'center red');
+
+        })
+    </script>
+</body>
+
+</html>

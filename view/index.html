@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 400px;
+            height: 500px;
+            position: relative;
+            border: 1px solid #999;
+        }
+
+        input {
+            width: 100%;
+        }
+
+        .bottom {
+            background: #999;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            position: absolute;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h1>Chat Person</h1>
+        <div class="messages">
+            <ul>
+
+            </ul>
+        </div>
+        <div class="bottom">
+            <input type="text" placeholder="Type message here..." id="msg"> <button id="btn" type="button">Send
+                Message</button>
+        </div>
+    </div>
+    <script>
+        const btn = document.querySelector("#btn");
+        const txt = document.querySelector("#msg");
+
+        const ul = document.querySelector("ul");
+        btn.addEventListener("click", () => {
+
+            const li = document.createElement("li");
+            li.innerText = txt.value;
+            ul.append(li);
+        })
+    </script>
+</body>
+
+</html>
