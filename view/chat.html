@@ -124,7 +124,7 @@
             chatbox.append(div);
         }
         const name = prompt("Please Enter your Name");
-        const socket = io('http://localhost:3000');
+        const socket = io('https://chatapp-3p89.onrender.com');
 
         socket.emit("new-user-join", name);
 
