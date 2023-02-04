@@ -29,6 +29,6 @@ app.use("/", (req, res) => {
   res.sendFile(path.join(__dirname, "view/chat.html"));
 });
 
-server.listen(3000, (req, res, next) => {
+server.listen(process.env.PORT || 3000, (req, res, next) => {
   console.log("listening");
 });
