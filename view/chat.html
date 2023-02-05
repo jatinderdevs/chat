@@ -79,6 +79,8 @@
         const msg = document.querySelector("#msg");
         const btn = document.querySelector("#btn");
 
+        const socket = io('https://chat-lhj6.onrender.com');
+
 
         actionBtn.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -97,7 +99,7 @@
         while (name == "") {
             name = prompt("Please Enter your Name");
         }
-        const socket = io('https://chat-lhj6.onrender.com');
+
 
         socket.emit("new-user-join", name);
 
