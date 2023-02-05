@@ -74,8 +74,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const chatbox = document.querySelector(".chatbox");
-        const tone = new Audio('message.mp3');
-        tone.play();
+
         const actionBtn = document.querySelector(".actionBtn");
         const msg = document.querySelector("#msg");
         const btn = document.querySelector("#btn");
@@ -98,7 +97,7 @@
         while (name == "") {
             name = prompt("Please Enter your Name");
         }
-        const socket = io(window.location.href);
+        const socket = io('https://chat-lhj6.onrender.com');
 
         socket.emit("new-user-join", name);
 
