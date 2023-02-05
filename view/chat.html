@@ -24,7 +24,7 @@
             padding: 10px;
             border-radius: 20px;
             margin: 10px 0;
-            width: 20vw;
+
         }
 
         .right {
@@ -59,7 +59,7 @@
             </div>
             <audio src="message.mp3" id="tone"></audio>
             <div class="chatbox">
-
+                <div class="clearfix"></div>
             </div>
 
 
@@ -80,6 +80,7 @@
         const btn = document.querySelector("#btn");
 
         const socket = io('https://chat-lhj6.onrender.com');
+        // const socket = io('http://localhost:3000');
 
 
         actionBtn.addEventListener("submit", (e) => {
@@ -113,7 +114,7 @@
 
         socket.on("getmsg", data => {
 
-            printMessage(data.message, data.name, ' message bg-dark float-right left text-white')
+            printMessage(data.message, data.name, ' message bg-primary left text-white')
         });
 
 
