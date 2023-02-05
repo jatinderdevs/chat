@@ -2,117 +2,88 @@
 <html>
 
 <head>
-    <title>Socket.IO Chat</title>
+    <title>Chat App</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
-        .container {
+        body {
+            background: linear-gradient(to top, rgb(255, 255, 255), rgb(90, 230, 246)) no-repeat;
+            background-size: cover;
 
-            margin: 0 auto;
-            font-family: 'calibri';
-        }
-
-        h1 {
-            text-align: center;
-            text-transform: capitalize;
-        }
-
-        .chatbox {
-            height: 500px;
-            padding: 20px;
-            border: 1px solid #dfdfdf;
-        }
-
-        .message {
-            text-transform: capitalize;
-            box-shadow: 0 0 10px #dfdfdf;
-            background: #dfdfdf;
-            padding: 10px;
-            border-radius: 20px;
-            margin: 10px 0;
-            width: 350px;
-        }
-
-        p {
-            margin: 0;
         }
 
         .left {
             margin: 10px 0 0 auto;
         }
 
+        .message {
+            text-transform: capitalize;
+            box-shadow: 0 0 10px #dfdfdf;
+            background: #efefef;
+            padding: 10px;
+            border-radius: 20px;
+            margin: 10px 0;
+            width: 20vw;
+        }
+
         .right {
             text-align: right;
+        }
+
+        .chatbox {
+
+            height: 300px;
+            overflow: auto;
+            padding: 20px;
         }
 
         .center {
             text-transform: capitalize;
 
-            width: 100%;
+
             margin: 10px 0;
             border-radius: 0;
             text-align: center;
         }
-
-        .red {
-            color: red;
-            font-weight: bold;
-        }
-
-        .green {
-            font-weight: bold;
-
-            color: green;
-        }
-
-        input {
-            width: 100%;
-            padding: 5px 10px;
-        }
-
-        .actionBtn {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
     </style>
-
 </head>
 
 <body>
     <div class="container">
-        <h1>Chat Room</h1>
-        <div class="chatbox">
-            <!-- <div class="message left">
-                <p>hi!</p>
+
+        <div class="card">
+            <div class="card-title">
+                <h1 class="alert text-center alert-primary">Chat Room</h1>
+
             </div>
-            <div class="center">
-                <p class="red">Anant left the chat</p>
+            <audio src="message.mp3" id="tone"></audio>
+            <div class="chatbox">
+
             </div>
-            <div class="message ">
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laudantium, animi molestiae facere, esse et
-                    doloremque dolorum repellendus debitis, commodi provident iste dolores omnis voluptates veniam
-                    nesciunt nobis corporis quam voluptatibus.</p>
-            </div>
-            <div class="center">
-                <p class="green">Anant joined the chat</p>
-            </div> -->
+
+
+            <form action="" class="actionBtn" method="post">
+                <input type="text" class="form-control" placeholder="Type message here...." name="msg" id="msg">
+                <button class="btn btn-primary" type="submit" id="btn">send</button>
+            </form>
         </div>
 
-        <form action="" class="actionBtn" method="post">
-            <input type="text" placeholder="Type message here...." name="msg" id="msg">
-            <button type="button" type="submit" id="btn">send</button>
-        </form>
 
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const chatbox = document.querySelector(".chatbox");
+        const tone = new Audio('message.mp3');
+        tone.play();
         const actionBtn = document.querySelector(".actionBtn");
         const msg = document.querySelector("#msg");
         const btn = document.querySelector("#btn");
 
+
         actionBtn.addEventListener("submit", (e) => {
             e.preventDefault();
-            printMessage(`You: ${msg.value}`, '', 'message right');
+            printMessage(`You: ${msg.value}`, '', 'message right ');
             socket.emit("send", msg.value);
             msg.value = '';
         })
@@ -123,13 +94,16 @@
             div.classList = className;
             chatbox.append(div);
         }
-        const name = prompt("Please Enter your Name");
+        let name = prompt("Please Enter your Name");
+        while (name == "") {
+            name = prompt("Please Enter your Name");
+        }
         const socket = io(window.location.href);
 
         socket.emit("new-user-join", name);
 
         socket.on("new-joine", name => {
-            printMessage('', `${name} joinde the chat`, 'center green');
+            printMessage('', `${name} joinde the chat`, 'center text-success');
         });
         socket.on('send', data => {
             printMessage(data.message, data.name, 'message');
@@ -137,12 +111,13 @@
 
 
         socket.on("getmsg", data => {
-            printMessage(data.message, data.name, ' message left')
+
+            printMessage(data.message, data.name, ' message bg-dark float-right left text-white')
         });
 
 
         socket.on("left", name => {
-            printMessage('', `${name} left the chat`, 'center red');
+            printMessage('', `${name} left the chat`, 'center text-danger');
 
         })
     </script>
