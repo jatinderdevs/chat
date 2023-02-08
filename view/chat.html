@@ -59,28 +59,61 @@
             </div>
             <audio src="message.mp3" id="tone"></audio>
             <div class="chatbox">
+                <div class="typing text-danger" id="typemsg"></div>
                 <div class="clearfix"></div>
             </div>
-
+            <img src="" id="icon" alt="">
 
             <form action="" class="actionBtn" method="post">
                 <input type="text" class="form-control" placeholder="Type message here...." name="msg" id="msg">
                 <button class="btn btn-primary" type="submit" id="btn">send</button>
             </form>
         </div>
-
-
+        <img src="deveolper.png" alt="">
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const chatbox = document.querySelector(".chatbox");
+        // async function isGranted() {
+        //     await Notification.requestPermission();
+        // }
+        // let isGranted="";
+        // Notification.requestPermission().then(prem => {
+        //     isGranted=prem;
+        //     if (prem !== "granted") {
+        //         new Notification("hello", {
+        //             body: "this my first notification",
+        //             image: "deveolper.png",
+        //         });
+        //     }
+        // })
+        async function showNotification(msg) {
+            const isApproved = await Notification.requestPermission();
+            if (isApproved === "granted") {
+                new Notification("New Notification", {
+                    body: msg,
+                    icon: "https://cdn-icons-png.flaticon.com/128/1827/1827370.png",
 
+                });
+            }
+
+        }
+        const chatbox = document.querySelector(".chatbox");
+        let name = prompt("Please Enter your Name");
+        while (name == "") {
+            name = prompt("Please Enter your Name");
+        }
         const actionBtn = document.querySelector(".actionBtn");
         const msg = document.querySelector("#msg");
         const btn = document.querySelector("#btn");
+        const typemsg = document.querySelector("#typemsg");
+        typemsg.innerHTML = "";
+        msg.addEventListener("input", () => {
 
-        const socket = io('https://chat-lhj6.onrender.com');
-        // const socket = io('http://localhost:3000');
+            socket.emit("typing", name);
+
+        })
+        // const socket = io('https://chat-lhj6.onrender.com');
+        const socket = io('http://localhost:3000');
 
 
         actionBtn.addEventListener("submit", (e) => {
@@ -96,21 +129,26 @@
             div.classList = className;
             chatbox.append(div);
         }
-        let name = prompt("Please Enter your Name");
-        while (name == "") {
-            name = prompt("Please Enter your Name");
-        }
+
+
 
 
         socket.emit("new-user-join", name);
 
         socket.on("new-joine", name => {
+            showNotification(`${name} joined the chat`);
             printMessage('', `${name} joinde the chat`, 'center text-success');
         });
         socket.on('send', data => {
+
+
             printMessage(data.message, data.name, 'message');
         });
 
+        socket.on('typename', name => {
+
+            typemsg.innerHTML = `${name} is Typing`;
+        });
 
         socket.on("getmsg", data => {
 
@@ -119,6 +157,8 @@
 
 
         socket.on("left", name => {
+            showNotification(`${name} left the chat`);
+
             printMessage('', `${name} left the chat`, 'center text-danger');
 
         })

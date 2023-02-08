@@ -19,6 +19,9 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("getmsg", { message, name: user[socket.id] });
   });
 
+  socket.on("typing", (name) => {
+    socket.broadcast.emit("typename", name);
+  });
   socket.on("disconnect", () => {
     socket.broadcast.emit("left", user[socket.id]);
     delete user[socket.id];
